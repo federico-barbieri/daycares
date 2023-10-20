@@ -1,13 +1,29 @@
 <template>
   <div>
-    <h1>KOMMUNAL DAYCARES</h1>
-    <p><strong>Number of kommunal daycares: {{ filteredDaycares.length }}</strong></p>
-    <ul v-for="daycare in filteredDaycares" :key="daycare.properties.kkorgnr">
-      <li>
-          <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
-          <p>Enheder leader: {{ daycare.properties.enhedsleder.trim() !== '' ? daycare.properties.enhedsleder : "NO LEADER PROVIDED" }}</p>
-      </li>
-    </ul>
+    <h1>DAYCARES</h1>
+      <section class="typesOfDaycares">
+          <div class="kommunalDaycare">
+                <h2>KOMMUNAL DAYCARES</h2>
+                <p><strong>Number of kommunal daycares: {{ kommunalDaycares.length }}</strong></p>
+                <ul v-for="daycare in kommunalDaycares" :key="daycare.properties.kkorgnr">
+                  <li>
+                      <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
+                      <p>Enheder leader: {{ daycare.properties.enhedsleder.trim() !== '' ? daycare.properties.enhedsleder : "NO LEADER PROVIDED" }}</p>
+                  </li>
+                </ul>
+            </div>
+
+            <div class="privatDaycare">
+                <h2>PRIVAT DAYCARES</h2>
+                <p><strong>Number of privat daycares: {{ privatDaycares.length }}</strong></p>
+                <ul v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
+                    <li>
+                        <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
+                        <p>Enheder leader: {{ daycare.properties.enhedsleder.trim() !== '' ? daycare.properties.enhedsleder : "NO LEADER PROVIDED" }}</p>
+                    </li>
+                </ul>
+            </div>
+    </section>
   </div>
 
 </template>
@@ -21,14 +37,17 @@ export default {
   data() {
     return {
       daycares: [],
-      filteredDaycares: []
+      kommunalDaycares: [],
+      privatDaycares: []
     };
   },
   mounted() {
     axios.get('/daycares.json') // Assuming daycares.json is in the public folder
       .then(response => {
         this.daycares = response.data.features;
-        this.filteredDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "kommunal");
+        this.kommunalDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "kommunal");
+        this.privatDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "selvejende");
+
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -47,13 +66,31 @@ export default {
   margin-top: 60px;
 }
 
+.typesOfDaycares{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-around;
+  width: 90vw;
+  margin: 0 auto;
+}
+
+.kommunalDaycare{
+  width: 50%;
+  border: 1px solid red;
+}
+
+.privatDaycare{
+  width: 50%;
+  border: 1px solid red;
+}
+
 
 ul{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  max-width: 80vw;
   height: auto;
   margin: 0 auto;
   list-style-type: none;
@@ -66,6 +103,7 @@ ul > li {
   border-radius: 10px;
   transition: all 0.5s ease-in;
   margin: 1rem auto;
+  width: 80%;
 
 }
 

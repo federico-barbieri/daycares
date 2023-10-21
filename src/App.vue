@@ -9,7 +9,7 @@
     </div>
       <section class="typesOfDaycares">
           <div class="kommunalDaycare" v-if="kommunalDaycareIsClicked">
-                <h2>KOMMUNAL DAYCARES</h2>
+                <h3>KOMMUNAL DAYCARES</h3>
                 <p><strong>Number of kommunal daycares: {{ kommunalDaycares.length }}</strong></p>
                 <ul>
                   <li v-for="daycare in kommunalDaycares" :key="daycare.properties.kkorgnr">
@@ -20,7 +20,7 @@
             </div>
 
             <div class="privatDaycare" v-if="privateDaycareIsClicked">
-                <h2>PRIVAT DAYCARES</h2>
+                <h3>PRIVAT DAYCARES</h3>
                 <p><strong>Number of privat daycares: {{ privatDaycares.length }}</strong></p>
                 <ul >
                     <li v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
@@ -31,11 +31,11 @@
             </div>
 
             <div class="emails" v-if="emailsIsClicked">
-                <h2>PRIVATE DAYCARE EMAILS</h2>
+                <h3>PRIVATE DAYCARE EMAILS</h3>
                 <p><strong>Number of emails: {{ daycareEmails.length }}</strong></p>
                 <ul>
                     <li v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
-                        <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
+                   <!--     <h2>Name: {{ daycare.properties.enhedsnavn }}</h2> -->
                         <p>email: {{ daycare.properties.email.trim() !== '' ? daycare.properties.email : "NO EMAIL PROVIDED" }}</p>
                     </li>
                 </ul>
@@ -132,6 +132,7 @@ main{
 
 ul{
   padding-inline-start: 0px;
+  padding: 1rem;
 }
 
 

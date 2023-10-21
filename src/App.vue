@@ -1,8 +1,13 @@
 <template>
-  <div>
-    <h1>DAYCARES</h1>
+  <main>
+    <h1>DAYCARES IN COPENHAGEN</h1>
+    <div class="btns-div">
+      <button @click="showPrivateDaycares">Private Daycares</button>
+      <button @click="showKommunalDaycares">Kommunal Daycares</button>
+
+    </div>
       <section class="typesOfDaycares">
-          <div class="kommunalDaycare">
+          <div class="kommunalDaycare" v-if="kommunalDaycareIsClicked">
                 <h2>KOMMUNAL DAYCARES</h2>
                 <p><strong>Number of kommunal daycares: {{ kommunalDaycares.length }}</strong></p>
                 <ul v-for="daycare in kommunalDaycares" :key="daycare.properties.kkorgnr">
@@ -13,7 +18,7 @@
                 </ul>
             </div>
 
-            <div class="privatDaycare">
+            <div class="privatDaycare" v-if="privateDaycareIsClicked">
                 <h2>PRIVAT DAYCARES</h2>
                 <p><strong>Number of privat daycares: {{ privatDaycares.length }}</strong></p>
                 <ul v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
@@ -24,21 +29,25 @@
                 </ul>
             </div>
     </section>
-  </div>
+  </main>
 
 </template>
 
 <script>
 
 import axios from 'axios';
+import { ref } from 'vue';
 
 export default {
+ 
   name: 'App',
   data() {
     return {
       daycares: [],
       kommunalDaycares: [],
-      privatDaycares: []
+      privatDaycares: [],
+      kommunalDaycareIsClicked: ref(false),
+      privateDaycareIsClicked: ref(false),
     };
   },
   mounted() {
@@ -52,6 +61,14 @@ export default {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
+  },
+  methods: {
+    showKommunalDaycares(){
+      this.kommunalDaycareIsClicked = !this.kommunalDaycareIsClicked;
+    },
+    showPrivateDaycares(){
+      this.privateDaycareIsClicked = !this.privateDaycareIsClicked;
+    },
   }
 };
 </script>
@@ -66,6 +83,27 @@ export default {
   margin-top: 60px;
 }
 
+main{
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+
+.btns-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 50%;
+  height: auto;
+  margin: 5rem auto;
+}
+
+.btns-div > button{
+  padding: 1rem;
+}
+
+
 .typesOfDaycares{
   display: flex;
   flex-direction: row;
@@ -77,12 +115,14 @@ export default {
 
 .kommunalDaycare{
   width: 50%;
-  border: 1px solid red;
+  border: 1px solid #2c3e50;
+  border-radius: 30px;
 }
 
 .privatDaycare{
   width: 50%;
-  border: 1px solid red;
+  border: 1px solid #2c3e50;
+  border-radius: 30px;
 }
 
 

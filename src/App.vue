@@ -2,44 +2,43 @@
   <main>
     <h1>DAYCARES IN COPENHAGEN</h1>
     <div class="btns-div">
-      <button @click="showPrivateDaycares">Private Daycares</button>
+      <button @click="showSelfOwnedDaycares">Kommunal Daycares (self-owned)</button>
       <button @click="showKommunalDaycares">Kommunal Daycares</button>
-      <button @click="showEmails">Daycares Emails</button>
+      <button @click="showPrivateDaycares">Private Daycares</button>
+
 
     </div>
       <section class="typesOfDaycares">
           <div class="kommunalDaycare" v-if="kommunalDaycareIsClicked">
-                <h3>KOMMUNAL DAYCARES</h3>
+                <h3>KOMMUNAL DAYCARES (kommunal)</h3>
                 <p><strong>Number of kommunal daycares: {{ kommunalDaycares.length }}</strong></p>
                 <ul>
                   <li v-for="daycare in kommunalDaycares" :key="daycare.properties.kkorgnr">
-                      <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
-                      <p>Enheder leader: {{ daycare.properties.enhedsleder.trim() !== '' ? daycare.properties.enhedsleder : "NO LEADER PROVIDED" }}</p>
+                    <DaycareCard
+                    :name="daycare.properties.enhedsnavn"
+                    :address="daycare.properties.adresse"
+                    :district="daycare.properties.postnr_og_postdistrikt" 
+                    :type="daycare.properties.ejerforhold"
+                    />
                   </li>
                 </ul>
             </div>
 
             <div class="privatDaycare" v-if="privateDaycareIsClicked">
-                <h3>PRIVAT DAYCARES</h3>
-                <p><strong>Number of privat daycares: {{ privatDaycares.length }}</strong></p>
+                <h3>KOMMUNAL DAYCARES (self-owned)</h3>
+                <p><strong>Number of self-owned kommunal daycares: {{ privatDaycares.length }}</strong></p>
                 <ul >
                     <li v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
-                        <h2>Name: {{ daycare.properties.enhedsnavn }}</h2>
-                        <p>Enheder leader: {{ daycare.properties.enhedsleder.trim() !== '' ? daycare.properties.enhedsleder : "NO LEADER PROVIDED" }}</p>
+                      <DaycareCard
+                    :name="daycare.properties.enhedsnavn"
+                    :address="daycare.properties.adresse"
+                    :district="daycare.properties.postnr_og_postdistrikt" 
+                    :type="daycare.properties.ejerforhold"
+                    />
                     </li>
                 </ul>
             </div>
 
-            <div class="emails" v-if="emailsIsClicked">
-                <h3>PRIVATE DAYCARE EMAILS</h3>
-                <p><strong>Number of emails: {{ daycareEmails.length }}</strong></p>
-                <ul>
-                    <li v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
-                   <!--     <h2>Name: {{ daycare.properties.enhedsnavn }}</h2> -->
-                        <p>email: {{ daycare.properties.email.trim() !== '' ? daycare.properties.email : "NO EMAIL PROVIDED" }}</p>
-                    </li>
-                </ul>
-            </div>
     </section>
   </main>
 
@@ -49,8 +48,13 @@
 
 import axios from 'axios';
 import { ref } from 'vue';
+// eslint-disable-next-line no-unused-vars
+import DaycareCard from './components/DaycareCard.vue';
 
 export default {
+  components: {
+    DaycareCard,
+  },
  
   name: 'App',
   data() {
@@ -60,8 +64,6 @@ export default {
       privatDaycares: [],
       kommunalDaycareIsClicked: ref(false),
       privateDaycareIsClicked: ref(false),
-      emailsIsClicked: ref(false),
-      daycareEmails: [],
     };
   },
   mounted() {
@@ -70,7 +72,6 @@ export default {
         this.daycares = response.data.features;
         this.kommunalDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "kommunal");
         this.privatDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "selvejende");
-        this.daycareEmails = this.privatDaycares.filter(daycare => daycare.properties.email);
 
       })
       .catch(error => {
@@ -81,11 +82,8 @@ export default {
     showKommunalDaycares(){
       this.kommunalDaycareIsClicked = !this.kommunalDaycareIsClicked;
     },
-    showPrivateDaycares(){
+    showSelfOwnedDaycares(){
       this.privateDaycareIsClicked = !this.privateDaycareIsClicked;
-    },
-    showEmails(){
-      this.emailsIsClicked = !this.emailsIsClicked;
     },
   }
 };

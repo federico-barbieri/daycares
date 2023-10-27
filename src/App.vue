@@ -2,16 +2,15 @@
   <main>
     <h1>DAYCARES IN COPENHAGEN</h1>
     <div class="btns-div">
-      <button @click="showSelfOwnedDaycares">Kommunal Daycares (self-owned)</button>
-      <button @click="showKommunalDaycares">Kommunal Daycares</button>
+      <button @click="showKommunalDaycares">Municipal Daycares</button>
       <button @click="showPrivateDaycares">Private Daycares</button>
 
 
     </div>
       <section class="typesOfDaycares">
           <div class="kommunalDaycare" v-if="kommunalDaycareIsClicked">
-                <h3>KOMMUNAL DAYCARES (kommunal)</h3>
-                <p><strong>Number of kommunal daycares: {{ kommunalDaycares.length }}</strong></p>
+                <h3>Municipal Daycares</h3>
+                <p><strong>Number of municipal daycares: {{ kommunalDaycares.length }}</strong></p>
                 <ul>
                   <li v-for="daycare in kommunalDaycares" :key="daycare.properties.kkorgnr">
                     <DaycareCard
@@ -25,8 +24,8 @@
             </div>
 
             <div class="privatDaycare" v-if="privateDaycareIsClicked">
-                <h3>KOMMUNAL DAYCARES (self-owned)</h3>
-                <p><strong>Number of self-owned kommunal daycares: {{ privatDaycares.length }}</strong></p>
+                <h3>Private Daycares</h3>
+                <p><strong>Number of private daycares: {{ privatDaycares.length }}</strong></p>
                 <ul >
                     <li v-for="daycare in privatDaycares" :key="daycare.properties.kkorgnr">
                       <DaycareCard
@@ -70,7 +69,7 @@ export default {
     axios.get('/daycares.json') // Assuming daycares.json is in the public folder
       .then(response => {
         this.daycares = response.data.features;
-        this.kommunalDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "kommunal");
+        this.kommunalDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "kommunal" || daycare.properties.ejerforhold.toLowerCase() === "selvejende");
         this.privatDaycares = this.daycares.filter(daycare => daycare.properties.ejerforhold.toLowerCase() === "selvejende");
 
       })
@@ -82,7 +81,7 @@ export default {
     showKommunalDaycares(){
       this.kommunalDaycareIsClicked = !this.kommunalDaycareIsClicked;
     },
-    showSelfOwnedDaycares(){
+    showPrivateDaycares(){
       this.privateDaycareIsClicked = !this.privateDaycareIsClicked;
     },
   }
